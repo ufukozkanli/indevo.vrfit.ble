@@ -265,7 +265,9 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
 
     @Override
     public void onSerialRead(byte[] data) {
-        receive(data);
+
+        MultiThreadedServer.get_current().write(data);
+        //receive(data);
     }
 
     @Override
