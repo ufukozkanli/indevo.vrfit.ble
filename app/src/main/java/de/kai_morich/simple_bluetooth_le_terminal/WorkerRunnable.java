@@ -27,9 +27,11 @@ public class WorkerRunnable implements Runnable {
         setData(data);
     }
 
-    public byte[] getData() {
+    public byte[] consumeData() {
         synchronized (this) {
-            return this.data;
+            byte[] dt =this.data;
+            this.data=null;
+            return dt;
         }
     }
 
@@ -48,13 +50,14 @@ public class WorkerRunnable implements Runnable {
             e.printStackTrace();
         }
         while (true) {
-            byte[] dt = getData();
+            byte[] dt = consumeData();
             if (dt == null) {
                 continue;
             }
             try {
                 output.write(dt);
-                Log.e("WORKERRUNNABLE", "WRITING");
+                output.flush();
+                Log.e("WORKERRUNNABLE", "WROTE");
             } catch (IOException e) {
                 e.printStackTrace();
             }
